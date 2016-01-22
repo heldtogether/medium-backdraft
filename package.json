@@ -7,5 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Josh Sephton",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "medium-sdk": "0.0.1"
+  }
 }
