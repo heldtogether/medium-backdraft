@@ -9,6 +9,7 @@
   "author": "Josh Sephton",
   "license": "MIT",
   "dependencies": {
+    "express": "^4.13.4",
     "medium-sdk": "0.0.1"
   }
 }
