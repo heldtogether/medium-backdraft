@@ -1,0 +1,11 @@
+{
+  "name": "backdraft",
+  "version": "1.0.0",
+  "description": "Create back-dated posts in Medium.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Josh Sephton",
+  "license": "MIT"
+}
