@@ -26,6 +26,7 @@ app.get('/auth/callback', function (req, res) {
 		'http://127.0.0.1:5000/auth/callback',
 		function (err, token) {
 			client.getUser(function (err, user) {
+				console.log(user);
 				// client.createPost({
 				// 	userId: user.id,
 				// 	title: 'A new post',
