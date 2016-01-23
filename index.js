@@ -15,6 +15,11 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 app.set('view engine', 'ejs');
 
+var mediumClient = new medium.MediumClient({
+	clientId: '4d200404ffd3',
+	clientSecret: '47a9b71ce0c333024065a2452d9dc20562db5f9d'
+});
+
 var appSecret = "fjiownfneworg849Y8974t8t9OAEIJoncaipPE*yryw9rw";
 
 var parseCookies = function (request) {
@@ -34,11 +39,7 @@ app.get('/', function (req, res) {
 });
 
 app.get('/auth', function (req, res) {
-	var client = new medium.MediumClient({
-		clientId: '4d200404ffd3',
-		clientSecret: '47a9b71ce0c333024065a2452d9dc20562db5f9d'
-	});
-	var url = client.getAuthorizationUrl(
+	var url = mediumClient.getAuthorizationUrl(
 		appSecret,
 		APP_URL+'/auth/callback',
 		[medium.Scope.BASIC_PROFILE, medium.Scope.PUBLISH_POST]
@@ -47,15 +48,11 @@ app.get('/auth', function (req, res) {
 });
 
 app.get('/auth/callback', function (req, res) {
-	var client = new medium.MediumClient({
-		clientId: '4d200404ffd3',
-		clientSecret: '47a9b71ce0c333024065a2452d9dc20562db5f9d'
-	});
-	client.exchangeAuthorizationCode(
+	mediumClient.exchangeAuthorizationCode(
 		req.query.code,
 		'http://127.0.0.1:5000/auth/callback',
 		function (err, token) {
-			client.getUser(function (err, user) {
+			mediumClient.getUser(function (err, user) {
 				if (err) {
 					res.render('error');
 				} else {
