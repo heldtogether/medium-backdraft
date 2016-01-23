@@ -2,6 +2,7 @@ var express = require('express');
 var medium = require('medium-sdk')
 
 var app = express();
+app.use(express.static(__dirname + '/public'));
 
 var appSecret = "fjiownfneworg849Y8974t8t9OAEIJoncaipPE*yryw9rw";
 
