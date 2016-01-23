@@ -1,5 +1,6 @@
 var express = require('express');
-var medium = require('medium-sdk')
+var medium = require('medium-sdk');
+var bodyParser = require('body-parser')
 
 var APP_PORT = process.env.PORT || 5000;
 var APP_URL = (process.env.NODE_ENV == 'production') ?
@@ -8,6 +9,10 @@ var APP_URL = (process.env.NODE_ENV == 'production') ?
 
 var app = express();
 app.use(express.static(__dirname + '/public'));
+app.use(bodyParser.urlencoded({
+	extended: true
+}));
+app.use(bodyParser.json());
 app.set('view engine', 'ejs');
 
 var appSecret = "fjiownfneworg849Y8974t8t9OAEIJoncaipPE*yryw9rw";
