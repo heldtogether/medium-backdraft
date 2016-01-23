@@ -81,12 +81,12 @@ app.route('/editor')
 .all(function(req, res, next) {
 	var cookies = parseCookies(req);
 	if (!cookies.mediumToken) {
-		res.redirect('/auth');
+		res.redirect('/');
 	} else {
 		mediumClient.setAccessToken(cookies.mediumToken);
 		mediumClient.getUser(function (err, user) {
 			if (err) {
-				res.redirect('/auth');
+				res.redirect('/');
 			} else {
 				next();
 			}
