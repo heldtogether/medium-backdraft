@@ -5,6 +5,10 @@ var app = express();
 
 var appSecret = "fjiownfneworg849Y8974t8t9OAEIJoncaipPE*yryw9rw";
 
+app.get('/', function (req, res) {
+	res.sendFile(path.join(__dirname+'/views/index.html'));
+});
+
 app.get('/auth', function (req, res) {
 	var client = new medium.MediumClient({
 		clientId: '4d200404ffd3',
