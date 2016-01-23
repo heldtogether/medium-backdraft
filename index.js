@@ -23,6 +23,8 @@ var mediumClient = new medium.MediumClient({
 	clientSecret: '47a9b71ce0c333024065a2452d9dc20562db5f9d'
 });
 
+var mediumUser;
+
 var appSecret = "fjiownfneworg849Y8974t8t9OAEIJoncaipPE*yryw9rw";
 
 
@@ -66,6 +68,7 @@ app.get('/auth/callback', function (req, res) {
 				if (err) {
 					res.render('error');
 				} else {
+					mediumUser = user;
 					res.cookie('mediumToken', token.access_token);
 					res.redirect('/editor');
 				}
@@ -88,6 +91,7 @@ app.route('/editor')
 			if (err) {
 				res.redirect('/');
 			} else {
+				mediumUser = user;
 				next();
 			}
 		});
@@ -97,17 +101,20 @@ app.route('/editor')
 	res.render('editor');
 })
 .post(function(req, res, next) {
-	console.log(req.body.post_date);
-	// mediumClient.createPost({
-	// 	userId: user.id,
-	// 	title: 'A new post',
-	// 	contentFormat: medium.PostContentFormat.HTML,
-	// 	content: req.body.post_body,
-	// 	publishStatus: medium.PostPublishStatus.PUBLIC,
-	// 	publishedAt: req.body.post_date+'T04:00:00+00:00'
-	// }, function (err, post) {
-	// 	console.log(token, user, post);
-	// });
+	mediumClient.createPost({
+		userId: mediumUser.id,
+		title: req.body.post_title,
+		contentFormat: medium.PostContentFormat.HTML,
+		content: req.body.post_body,
+		publishStatus: medium.PostPublishStatus.PUBLIC,
+		publishedAt: req.body.post_date+'T04:00:00+00:00'
+	}, function (err, post) {
+		if (err) {
+			res.render('error');
+		} else {
+			res.render('success');
+		}
+	});
 });
 
 
