@@ -2,6 +2,9 @@ var express = require('express');
 var medium = require('medium-sdk');
 var bodyParser = require('body-parser')
 
+
+// Setup
+
 var APP_PORT = process.env.PORT || 5000;
 var APP_URL = (process.env.NODE_ENV == 'production') ?
 	'https://medium-backdraft.herokuapp.com' :
@@ -22,21 +25,28 @@ var mediumClient = new medium.MediumClient({
 
 var appSecret = "fjiownfneworg849Y8974t8t9OAEIJoncaipPE*yryw9rw";
 
-var parseCookies = function (request) {
-	var list = {},
-		rc = request.headers.cookie;
 
+// Helpers
+
+var parseCookies = function (req) {
+	var list = {};
+	var rc = req.headers.cookie;
 	rc && rc.split(';').forEach(function( cookie ) {
 		var parts = cookie.split('=');
 		list[parts.shift().trim()] = decodeURI(parts.join('='));
 	});
-
 	return list;
 }
+
+
+// Index
 
 app.get('/', function (req, res) {
 	res.render('index');
 });
+
+
+// Auth
 
 app.get('/auth', function (req, res) {
 	var url = mediumClient.getAuthorizationUrl(
@@ -56,60 +66,52 @@ app.get('/auth/callback', function (req, res) {
 				if (err) {
 					res.render('error');
 				} else {
-					res.cookie('medium-token', token.access_token);
+					res.cookie('mediumToken', token.access_token);
 					res.redirect('/editor');
 				}
-				// client.createPost({
-				// 	userId: user.id,
-				// 	title: 'A new post',
-				// 	contentFormat: medium.PostContentFormat.HTML,
-				// 	content: '<h1>A New Post</h1><p>This is my new post.</p>',
-				// 	publishStatus: medium.PostPublishStatus.PUBLIC,
-				// 	publishedAt: '2004-02-12T15:19:21+00:00'
-				// }, function (err, post) {
-				// 	console.log(token, user, post);
-				// });
 			});
 		}
 	);
 });
 
-app.get('/editor', function (req, res) {
+
+// Editor
+
+app.route('/editor')
+.all(function(req, res, next) {
+	var cookies = parseCookies(req);
+	if (!cookies.mediumToken) {
+		res.redirect('/auth');
+	} else {
+		mediumClient.getUser(function (err, user) {
+			if (err) {
+				res.redirect('/auth');
+			} else {
+				next();
+			}
+		});
+	}
+})
+.get(function(req, res, next) {
 	res.render('editor');
+})
+.post(function(req, res, next) {
+	console.log(req.body.post_date);
+	// mediumClient.createPost({
+	// 	userId: user.id,
+	// 	title: 'A new post',
+	// 	contentFormat: medium.PostContentFormat.HTML,
+	// 	content: req.body.post_body,
+	// 	publishStatus: medium.PostPublishStatus.PUBLIC,
+	// 	publishedAt: req.body.post_date+'T04:00:00+00:00'
+	// }, function (err, post) {
+	// 	console.log(token, user, post);
+	// });
 });
+
+
+// Init
 
 app.listen(APP_PORT, function () {
  	console.log('Example app listening on port ' + APP_PORT);
 });
-
-//
-// var medium = require('medium-sdk')
-//
-// var client = new medium.MediumClient({
-// 	clientId: '4d200404ffd3',
-// 	clientSecret: '47a9b71ce0c333024065a2452d9dc20562db5f9d'
-// });
-//
-// var url = client.getAuthorizationUrl(
-// 	'secretState',
-// 	'http://127.0.0.1:5000/callback',
-// 	[medium.Scope.BASIC_PROFILE, medium.Scope.PUBLISH_POST]
-// );
-//
-// client.exchangeAuthorizationCode(code, redirectUrl, callback) {
-//
-// // (Send the user to the authorization URL to obtain an authorization code.)
-//
-// client.ExchangeAuthorizationCode('YOUR_AUTHORIZATION_CODE', function (err, token) {
-// 	client.getUser(function (err, user) {
-// 		client.createPost({
-// 			userId: user.id,
-// 			title: 'A new post',
-// 			contentFormat: medium.PostContentFormat.HTML,
-// 			content: '<h1>A New Post</h1><p>This is my new post.</p>',
-// 			publishStatus: medium.PostPublishStatus.DRAFT
-// 		}, function (err, post) {
-// 			console.log(token, user, post)
-// 		});
-// 	});
-// });
