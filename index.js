@@ -64,6 +64,7 @@ app.get('/auth/callback', function (req, res) {
 		function (err, token) {
 			mediumClient.getUser(function (err, user) {
 				if (err) {
+					console.log(err);
 					res.render('error');
 				} else {
 					res.cookie('mediumToken', token.access_token);
