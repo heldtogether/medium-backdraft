@@ -3,6 +3,7 @@ var medium = require('medium-sdk')
 
 var app = express();
 app.use(express.static(__dirname + '/public'));
+app.set('view engine', 'ejs');
 
 var appSecret = "fjiownfneworg849Y8974t8t9OAEIJoncaipPE*yryw9rw";
 
