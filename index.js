@@ -8,7 +8,7 @@ app.set('view engine', 'ejs');
 var appSecret = "fjiownfneworg849Y8974t8t9OAEIJoncaipPE*yryw9rw";
 
 app.get('/', function (req, res) {
-	res.sendFile(path.join(__dirname+'/views/index.html'));
+	res.render('index');
 });
 
 app.get('/auth', function (req, res) {
