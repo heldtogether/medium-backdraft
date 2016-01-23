@@ -3,13 +3,15 @@ var medium = require('medium-sdk')
 
 var app = express();
 
+var appSecret = "fjiownfneworg849Y8974t8t9OAEIJoncaipPE*yryw9rw";
+
 app.get('/auth', function (req, res) {
 	var client = new medium.MediumClient({
 		clientId: '4d200404ffd3',
 		clientSecret: '47a9b71ce0c333024065a2452d9dc20562db5f9d'
 	});
 	var url = client.getAuthorizationUrl(
-		'secretState',
+		appSecret,
 		'http://127.0.0.1:5000/auth/callback',
 		[medium.Scope.BASIC_PROFILE, medium.Scope.PUBLISH_POST]
 	);
