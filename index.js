@@ -60,11 +60,10 @@ app.get('/auth', function (req, res) {
 app.get('/auth/callback', function (req, res) {
 	mediumClient.exchangeAuthorizationCode(
 		req.query.code,
-		APP_URL,
+		APP_URL+'/auth/callback',
 		function (err, token) {
 			mediumClient.getUser(function (err, user) {
 				if (err) {
-					console.log(err);
 					res.render('error');
 				} else {
 					res.cookie('mediumToken', token.access_token);
@@ -84,6 +83,7 @@ app.route('/editor')
 	if (!cookies.mediumToken) {
 		res.redirect('/auth');
 	} else {
+		mediumClient.setAccessToken(cookies.mediumToken);
 		mediumClient.getUser(function (err, user) {
 			if (err) {
 				res.redirect('/auth');
