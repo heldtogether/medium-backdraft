@@ -1,11 +1,28 @@
 var express = require('express');
 var medium = require('medium-sdk')
 
+var APP_PORT = process.env.PORT || 5000;
+var APP_URL = (process.env.NODE_ENV == 'production') ?
+	'https://medium-backdraft.herokuapp.com' :
+	'http://127.0.0.1:'+APP_PORT;
+
 var app = express();
 app.use(express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');
 
 var appSecret = "fjiownfneworg849Y8974t8t9OAEIJoncaipPE*yryw9rw";
+
+var parseCookies = function (request) {
+	var list = {},
+		rc = request.headers.cookie;
+
+	rc && rc.split(';').forEach(function( cookie ) {
+		var parts = cookie.split('=');
+		list[parts.shift().trim()] = decodeURI(parts.join('='));
+	});
+
+	return list;
+}
 
 app.get('/', function (req, res) {
 	res.render('index');
@@ -18,7 +35,7 @@ app.get('/auth', function (req, res) {
 	});
 	var url = client.getAuthorizationUrl(
 		appSecret,
-		'http://127.0.0.1:5000/auth/callback',
+		APP_URL+'/auth/callback',
 		[medium.Scope.BASIC_PROFILE, medium.Scope.PUBLISH_POST]
 	);
 	res.redirect(url);
@@ -34,7 +51,12 @@ app.get('/auth/callback', function (req, res) {
 		'http://127.0.0.1:5000/auth/callback',
 		function (err, token) {
 			client.getUser(function (err, user) {
-				console.log(user);
+				if (err) {
+					res.render('error');
+				} else {
+					res.cookie('medium-token', token.access_token);
+					res.redirect('/editor');
+				}
 				// client.createPost({
 				// 	userId: user.id,
 				// 	title: 'A new post',
@@ -50,10 +72,12 @@ app.get('/auth/callback', function (req, res) {
 	);
 });
 
-var port = process.env.PORT || 8080;
+app.get('/editor', function (req, res) {
+	res.render('editor');
+});
 
-app.listen(port, function () {
- 	console.log('Example app listening on port ' + port);
+app.listen(APP_PORT, function () {
+ 	console.log('Example app listening on port ' + APP_PORT);
 });
 
 //
