@@ -60,7 +60,7 @@ app.get('/auth', function (req, res) {
 app.get('/auth/callback', function (req, res) {
 	mediumClient.exchangeAuthorizationCode(
 		req.query.code,
-		'http://127.0.0.1:5000/auth/callback',
+		APP_URL,
 		function (err, token) {
 			mediumClient.getUser(function (err, user) {
 				if (err) {
