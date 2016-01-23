@@ -10,6 +10,7 @@
   "license": "MIT",
   "dependencies": {
     "express": "^4.13.4",
+    "forever": "^0.15.1",
     "medium-sdk": "Medium/medium-sdk-nodejs#647efc92d4e9bd4",
     "path": "^0.12.7"
   },
