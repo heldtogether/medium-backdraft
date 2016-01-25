@@ -13,11 +13,11 @@
     "ejs": "^2.3.4",
     "express": "^4.13.4",
     "forever": "^0.15.1",
-    "medium-sdk": "Medium/medium-sdk-nodejs#647efc92d4e9bd4",
+    "medium-sdk": "heldtogether/medium-sdk-nodejs#4e363a9",
     "path": "^0.12.7"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Medium/medium-sdk-nodejs.git"
+    "url": "https://github.com/heldtogether/medium-sdk-nodejs.git"
   }
 }
