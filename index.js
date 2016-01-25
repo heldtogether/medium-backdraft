@@ -19,8 +19,8 @@ app.use(bodyParser.json());
 app.set('view engine', 'ejs');
 
 var mediumClient = new medium.MediumClient({
-	clientId: 'XXX',
-	clientSecret: 'XXX'
+	clientId: process.env.MEDIUM_CLIENT_ID || 'XXX',
+	clientSecret: process.env.MEDIUM_CLIENT_SECRET || 'XXX'
 });
 
 var mediumUser;
